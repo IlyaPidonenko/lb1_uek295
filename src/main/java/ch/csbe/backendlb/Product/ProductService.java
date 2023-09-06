@@ -1,6 +1,5 @@
-package ch.csbe.backendlb.Entity.Product;
+package ch.csbe.backendlb.Product;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +20,7 @@ public class ProductService {
 
     public Product getById(Long id) {
         Optional<Product> productOptional = productRepository.findById(id);
-        if(productOptional.isPresent()) {
+        if (productOptional.isPresent()) {
             return productOptional.get();
         }
         return new Product();
@@ -31,22 +30,21 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product update(Long id, Product product) {
+
+    public Product update(Long id, Product updatedProduct) {
         Optional<Product> productOptional = productRepository.findById(id);
-        if(productOptional.isPresent()) {
+        if (productOptional.isPresent()) {
             Product existingProduct = productOptional.get();
-            existingProduct.setTitle(product.getTitle());
-            existingProduct.setPrice(product.getPrice());
-            existingProduct.setCategory(product.getCategory());
+            existingProduct.setProductName(updatedProduct.getProductName());
+            existingProduct.setPrice(updatedProduct.getPrice());
             return productRepository.save(existingProduct);
         }
         return new Product();
     }
 
     public void deleteById(Long id) {
-        if(productRepository.existsById(id)) {
+        if (productRepository.existsById(id)) {
             productRepository.deleteById(id);
         }
     }
 }
-
