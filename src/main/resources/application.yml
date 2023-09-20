@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mariadb://localhost:3306/product-manager
     username: root
-    password: csbe123
+    password: admin12345
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     generate-ddl: true
