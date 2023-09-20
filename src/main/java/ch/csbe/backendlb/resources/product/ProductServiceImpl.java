@@ -39,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
             existingProduct.setCategory(product.getCategory());
             return productRepository.save(existingProduct);
         }
-        return null; // You may consider throwing an exception here to indicate that the product was not found.
+        return null;
     }
 
     public void deleteById(Long id) {
