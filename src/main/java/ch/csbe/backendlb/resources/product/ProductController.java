@@ -1,13 +1,17 @@
 package ch.csbe.backendlb.resources.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 import java.util.List;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RequestMapping("/products")
 @RestController
@@ -16,41 +20,35 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping()
-    @Operation(
-            summary = "Holen Sie alle Produkte",
-            operationId = "getProducts",
-            description = "Holen Sie eine Liste aller Produkte."
-    )
-    public List<Product> getProducts() {
-        return productService.getAll();
+    @GetMapping("/products")
+    public List<Product> getAllProducts() {
+        List<Product> products = productService.getAll();
+        return products;
+    }
+    @GetMapping("/products/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        Product product = productService.getById(id);
+        if (product != null) {
+            return ResponseEntity.ok(product);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PostMapping()
-    @Operation(
-            summary = "Erstellen Sie ein neues Produkt",
-            operationId = "createProduct",
-            description = "Erstellen Sie ein neues Produkt."
-    )
-    @ApiResponse(
-            responseCode = "201",
-            description = "Produkt erstellt",
-            content = @Content(schema = @Schema(implementation = Product.class))
-    )
-    public Product createProduct(@RequestBody Product product) {
-        return productService.create(product);
+
+    @PostMapping("/products")
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+        Product createdProduct = productService.create(product);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(createdProduct.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(createdProduct);
     }
 
-    @GetMapping("/{id}")
-    @Operation(
-            summary = "Holen Sie ein Produkt anhand seiner ID",
-            operationId = "getProductById",
-            description = "Holen Sie ein Produkt anhand seiner ID."
-    )
-    public Product getProductById(
-            @Parameter(description = "ID des Produkts") @PathVariable("id") Long id) {
-        return productService.getById(id);
-    }
+
+
 
     @PutMapping("/{id}")
     @Operation(
@@ -63,6 +61,7 @@ public class ProductController {
             @RequestBody Product product) {
         return productService.update(id, product);
     }
+
 
     @DeleteMapping("/{id}")
     @Operation(

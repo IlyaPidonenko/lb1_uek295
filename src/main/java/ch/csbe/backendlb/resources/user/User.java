@@ -12,7 +12,7 @@ import java.util.Date;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private int id;
     @Column(columnDefinition="varchar(255)")
     private String username;
     @Column(columnDefinition="varchar(255)")
@@ -34,11 +34,11 @@ public class User {
     @Column(columnDefinition="varchar(255)")
     private String city;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
